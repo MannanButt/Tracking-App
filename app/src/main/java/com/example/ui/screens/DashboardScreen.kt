@@ -114,6 +114,7 @@ fun DashboardScreen(
     // Shared Custom Header Component
     DashboardHeader(
       isDarkMode = state.isDarkMode,
+      userName = state.userName,
       onToggleDarkMode = { viewModel.toggleDarkMode() }
     )
 
@@ -499,6 +500,7 @@ fun DashboardScreen(
 @Composable
 fun DashboardHeader(
   isDarkMode: Boolean,
+  userName: String,
   onToggleDarkMode: () -> Unit
 ) {
   Row(
@@ -532,7 +534,7 @@ fun DashboardHeader(
 
     // Centered greeting exactly as designed
     Text(
-      text = "Assalamu Alaikum, Amina",
+      text = "Assalamu Alaikum, $userName",
       fontSize = 14.sp,
       fontWeight = FontWeight.SemiBold,
       color = MaterialTheme.colorScheme.onSurface,

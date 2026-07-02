@@ -332,6 +332,12 @@ fun LoginScreen(
         Button(
           onClick = { 
             if (validateInputs()) {
+              val cleanName = if (email.contains("@")) {
+                email.substringBefore("@").split('.').joinToString(" ") { it.replaceFirstChar { char -> char.uppercase() } }
+              } else {
+                email
+              }
+              viewModel.updateUserName(cleanName)
               viewModel.navigateTo("dashboard")
             }
           },
@@ -381,7 +387,10 @@ fun LoginScreen(
 
       // Social Logins
       OutlinedButton(
-        onClick = { viewModel.navigateTo("dashboard") },
+        onClick = { 
+          viewModel.updateUserName("Google User")
+          viewModel.navigateTo("dashboard") 
+        },
         modifier = Modifier
           .fillMaxWidth()
           .height(52.dp),
@@ -412,7 +421,10 @@ fun LoginScreen(
       Spacer(modifier = Modifier.height(12.dp))
 
       OutlinedButton(
-        onClick = { viewModel.navigateTo("dashboard") },
+        onClick = { 
+          viewModel.updateUserName("Apple User")
+          viewModel.navigateTo("dashboard") 
+        },
         modifier = Modifier
           .fillMaxWidth()
           .height(52.dp),

@@ -606,6 +606,13 @@ class NurViewModel(application: Application) : AndroidViewModel(application) {
     }
   }
 
+  fun updateUserName(name: String) {
+    viewModelScope.launch {
+      val state = dao.getAppState() ?: return@launch
+      dao.updateAppState(state.copy(userName = name))
+    }
+  }
+
   fun updateFitnessGoal(goal: String) {
     viewModelScope.launch {
       val state = dao.getAppState() ?: return@launch
