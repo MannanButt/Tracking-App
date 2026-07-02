@@ -1,0 +1,20 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Outer accent circle -->
+    <path
+        android:strokeColor="#00E5FF"
+        android:strokeWidth="2.5"
+        android:strokeLineCap="round"
+        android:pathData="M 54,20 A 34,34 0 1 1 53.9,20" />
+    
+    <!-- Stylized "M" and "B" as a Pulse Line (Heartbeat) -->
+    <path
+        android:strokeColor="#FFD700"
+        android:strokeWidth="4"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M 28,54 L 38,54 L 42,34 L 47,68 L 52,44 L 56,58 L 60,54 L 64,38 L 70,54 L 80,54" />
+</vector>
