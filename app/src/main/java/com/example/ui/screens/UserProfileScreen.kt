@@ -62,6 +62,12 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.viewmodel.NurViewModel
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.material.icons.filled.CameraAlt
+import android.graphics.Bitmap
+import java.io.File
+import java.io.FileOutputStream
 
 @Composable
 fun UserProfileScreen(
@@ -70,6 +76,23 @@ fun UserProfileScreen(
 ) {
   val appState by viewModel.appState.collectAsState()
   val state = appState ?: return
+
+  val context = LocalContext.current
+  val cameraLauncher = rememberLauncherForActivityResult(
+    contract = ActivityResultContracts.TakePicturePreview()
+  ) { bitmap ->
+    if (bitmap != null) {
+      try {
+        val file = File(context.filesDir, "profile_pic.jpg")
+        FileOutputStream(file).use { out ->
+          bitmap.compress(Bitmap.CompressFormat.JPEG, 90, out)
+        }
+        viewModel.updateProfilePic(file.absolutePath)
+      } catch (e: Exception) {
+        e.printStackTrace()
+      }
+    }
+  }
 
   var showResetDialog by remember { mutableStateOf(false) }
 
@@ -160,17 +183,68 @@ fun UserProfileScreen(
               .padding(4.dp),
             contentAlignment = Alignment.Center
           ) {
-            AsyncImage(
-              model = ImageRequest.Builder(LocalContext.current)
-                .data("https://lh3.googleusercontent.com/aida-public/AB6AXuCvLoqbpWpPsjW2E0-hdP7_xluf4r9o_cjM1LCNedFhCMn8aG1fMBDE9es6pOmgmlr2qQzrkxQOeOk1HjsTkYqKHXAHii4KzV8lE-Z2CGFi9hJDm1fPSCJtrisCtthdgMpgRc6N_XuV2WxWtSktZok8Wpr9JO81Qeb7GXOjcQszh8zKDXnVId9eS1wfwOYKOtsLHQNxxC4tLIu22i15D8_7FhsSOxPdgZsqsIxuKVUAUxn6MWYmi_g4OA")
-                .crossfade(true)
-                .build(),
-              contentDescription = "User Avatar",
-              modifier = Modifier
-                .fillMaxSize()
-                .clip(CircleShape)
-                .background(MaterialTheme.colorScheme.surface),
-              contentScale = ContentScale.Crop
+            val profilePicFile = state.profilePicUri?.let { File(it) }
+            val hasProfilePic = profilePicFile != null && profilePicFile.exists()
+
+            if (hasProfilePic) {
+              AsyncImage(
+                model = ImageRequest.Builder(context)
+                  .data(profilePicFile)
+                  .crossfade(true)
+                  .build(),
+                contentDescription = "User Avatar",
+                modifier = Modifier
+                  .fillMaxSize()
+                  .clip(CircleShape)
+                  .background(MaterialTheme.colorScheme.surface),
+                contentScale = ContentScale.Crop
+              )
+            } else {
+              // Dynamic initials placeholder
+              val initials = state.userName.split(" ")
+                .mapNotNull { it.firstOrNull()?.toString() }
+                .take(2)
+                .joinToString("")
+                .uppercase()
+
+              Box(
+                modifier = Modifier
+                  .fillMaxSize()
+                  .clip(CircleShape)
+                  .background(
+                    brush = Brush.linearGradient(
+                      colors = listOf(
+                        MaterialTheme.colorScheme.primaryContainer,
+                        MaterialTheme.colorScheme.secondaryContainer
+                      )
+                    )
+                  ),
+                contentAlignment = Alignment.Center
+              ) {
+                Text(
+                  text = initials.ifEmpty { "?" },
+                  fontSize = 36.sp,
+                  fontWeight = FontWeight.Bold,
+                  color = MaterialTheme.colorScheme.onPrimaryContainer
+                )
+              }
+            }
+          }
+
+          // Camera Edit Button (positioned at bottom right of the avatar box)
+          IconButton(
+            onClick = { cameraLauncher.launch(null) },
+            modifier = Modifier
+              .size(36.dp)
+              .offset(x = 44.dp, y = (-4).dp)
+              .background(MaterialTheme.colorScheme.primary, CircleShape)
+              .padding(4.dp)
+          ) {
+            Icon(
+              imageVector = Icons.Default.CameraAlt,
+              contentDescription = "Take Profile Picture",
+              tint = MaterialTheme.colorScheme.onPrimary,
+              modifier = Modifier.size(18.dp)
             )
           }
 
@@ -410,7 +484,7 @@ fun UserProfileScreen(
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onSurface
           )
-          TextButton(onClick = { viewModel.navigateTo("leaderboard") }) {
+          TextButton(onClick = { viewModel.navigateTo("achievements") }) {
             Text(
               text = "View All",
               fontSize = 14.sp,

@@ -98,6 +98,7 @@ class NurViewModel(application: Application) : AndroidViewModel(application) {
         val defaultState = NurAppState(
           isDarkMode = false,
           userName = "Sarah Jenkins",
+          profilePicUri = null,
           userXp = 12450,
           userLevel = 12,
           streakDays = 12,
@@ -542,6 +543,7 @@ class NurViewModel(application: Application) : AndroidViewModel(application) {
       val defaultState = NurAppState(
         isDarkMode = false,
         userName = "Sarah Jenkins",
+        profilePicUri = null,
         userXp = 12450,
         userLevel = 12,
         streakDays = 12,
@@ -610,6 +612,13 @@ class NurViewModel(application: Application) : AndroidViewModel(application) {
     viewModelScope.launch {
       val state = dao.getAppState() ?: return@launch
       dao.updateAppState(state.copy(userName = name))
+    }
+  }
+
+  fun updateProfilePic(uri: String?) {
+    viewModelScope.launch {
+      val state = dao.getAppState() ?: return@launch
+      dao.updateAppState(state.copy(profilePicUri = uri))
     }
   }
 

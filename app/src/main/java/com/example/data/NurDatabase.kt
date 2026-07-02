@@ -16,6 +16,7 @@ data class NurAppState(
   @PrimaryKey val id: Int = 1,
   val isDarkMode: Boolean = false,
   val userName: String = "Sarah Jenkins",
+  val profilePicUri: String? = null,
   val userXp: Int = 12450,
   val userLevel: Int = 12,
   val streakDays: Int = 12,
@@ -82,7 +83,7 @@ interface NurDao {
   suspend fun clearActivityLogs()
 }
 
-@Database(entities = [NurAppState::class, NurActivityLog::class], version = 3, exportSchema = false)
+@Database(entities = [NurAppState::class, NurActivityLog::class], version = 4, exportSchema = false)
 abstract class NurDatabase : RoomDatabase() {
   abstract fun nurDao(): NurDao
 }

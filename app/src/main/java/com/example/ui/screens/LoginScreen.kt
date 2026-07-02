@@ -338,7 +338,7 @@ fun LoginScreen(
                 email
               }
               viewModel.updateUserName(cleanName)
-              viewModel.navigateTo("dashboard")
+              viewModel.navigateTo("landing")
             }
           },
           modifier = Modifier
@@ -389,7 +389,7 @@ fun LoginScreen(
       OutlinedButton(
         onClick = { 
           viewModel.updateUserName("Google User")
-          viewModel.navigateTo("dashboard") 
+          viewModel.navigateTo("landing") 
         },
         modifier = Modifier
           .fillMaxWidth()
@@ -423,7 +423,7 @@ fun LoginScreen(
       OutlinedButton(
         onClick = { 
           viewModel.updateUserName("Apple User")
-          viewModel.navigateTo("dashboard") 
+          viewModel.navigateTo("landing") 
         },
         modifier = Modifier
           .fillMaxWidth()

@@ -48,7 +48,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.ui.screens.AchievementsScreen
 import com.example.ui.screens.DashboardScreen
 import com.example.ui.screens.DietTrackerScreen
-import com.example.ui.screens.LeaderboardScreen
+import com.example.ui.screens.LandingScreen
 import com.example.ui.screens.LoginScreen
 import com.example.ui.screens.PrayerTrackerScreen
 import com.example.ui.screens.UserProfileScreen
@@ -71,8 +71,8 @@ class MainActivity : ComponentActivity() {
         Scaffold(
           modifier = Modifier.fillMaxSize(),
           bottomBar = {
-            // Render Bottom Bar only when not on Login screen
-            if (currentRoute != "login") {
+            // Render Bottom Bar only when not on Login or Landing screen
+            if (currentRoute != "login" && currentRoute != "landing") {
               BottomNavBar(
                 currentRoute = currentRoute,
                 onNavigate = { route -> viewModel.navigateTo(route) }
@@ -88,12 +88,12 @@ class MainActivity : ComponentActivity() {
             Crossfade(targetState = currentRoute, label = "screen_transition") { route ->
               when (route) {
                 "login" -> LoginScreen(viewModel = viewModel)
+                "landing" -> LandingScreen(viewModel = viewModel)
                 "dashboard" -> DashboardScreen(viewModel = viewModel)
                 "prayer_tracker" -> PrayerTrackerScreen(viewModel = viewModel)
                 "workout_tracker" -> WorkoutTrackerScreen(viewModel = viewModel)
                 "diet_tracker" -> DietTrackerScreen(viewModel = viewModel)
                 "achievements" -> AchievementsScreen(viewModel = viewModel)
-                "leaderboard" -> LeaderboardScreen(viewModel = viewModel)
                 "user_profile" -> UserProfileScreen(viewModel = viewModel)
                 else -> DashboardScreen(viewModel = viewModel)
               }
@@ -153,12 +153,12 @@ fun BottomNavBar(
         onClick = { onNavigate("diet_tracker") }
       )
 
-      // Leaderboard Tab
+      // Achievements Tab
       BottomNavItem(
         icon = Icons.Default.EmojiEvents,
-        label = "Leaderboard",
-        isSelected = currentRoute == "leaderboard" || currentRoute == "achievements",
-        onClick = { onNavigate("leaderboard") }
+        label = "Achievements",
+        isSelected = currentRoute == "achievements",
+        onClick = { onNavigate("achievements") }
       )
 
       // Account Tab
